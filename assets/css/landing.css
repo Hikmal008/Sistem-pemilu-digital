@@ -1,0 +1,157 @@
+/* File: assets/css/landing.css */
+/* Deskripsi: Style untuk halaman landing page */
+
+body.landing-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-container {
+    text-align: center;
+    color: white;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.landing-container h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: fadeInDown 1s;
+}
+
+.landing-container p {
+    font-size: 1.2em;
+    margin-bottom: 40px;
+    animation: fadeInUp 1s;
+}
+
+.btn-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeIn 1.5s;
+}
+
+.btn-landing {
+    padding: 15px 40px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.btn-login {
+    background-color: white;
+    color: #667eea;
+}
+
+.btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.btn-register {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-register:hover {
+    background-color: white;
+    color: #667eea;
+    transform: translateY(-3px);
+}
+
+.features {
+    margin-top: 60px;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeInUp 2s;
+}
+
+.feature-card {
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 15px;
+    width: 250px;
+    transition: all 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(255,255,255,0.2);
+}
+
+.feature-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.feature-card p {
+    font-size: 1em;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .landing-container h1 {
+        font-size: 2em;
+    }
+    
+    .landing-container p {
+        font-size: 1em;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .features {
+        flex-direction: column;
+        align-items: center;
+    }
+}
