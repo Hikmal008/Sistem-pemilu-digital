@@ -81,6 +81,7 @@ $flash = get_flash_message();
             <a href="index.php">Beranda</a>
             <a href="voting.php">Voting</a>
             <a href="hasil.php">Hasil</a>
+            <a href="arsip.php">Arsip</a>
             <a href="profil.php" class="active">Profil</a>
             <a href="logout.php" style="background-color: rgba(255,255,255,0.2);">Logout</a>
         </div>
