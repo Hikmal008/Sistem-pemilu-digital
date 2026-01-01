@@ -1,53 +1,83 @@
 <?php
 // File: admin/index.php
-
-
+// UPDATE: Dashboard dengan sidebar dan tema merah
 session_start();
 require_once '../config/database.php';
 require_once '../includes/auth_check.php';
-
 // Cek apakah user adalah admin
 check_admin();
-
 // Auto update status pemilu
 auto_update_election_status();
-
 // Ambil pemilu aktif
 $active_election = get_active_election();
+// =============================
+// HITUNG STATISTIK GLOBAL
+// =============================
 
-// Hitung statistik global
-$query_total_kandidat = "SELECT COUNT(*) as total FROM kandidat";
-$result_kandidat = mysqli_query($conn, $query_total_kandidat);
-$total_kandidat = mysqli_fetch_assoc($result_kandidat)['total'];
+$total_kandidat = 0;
+$total_pemilih  = 0;
+$total_suara    = 0;
+$total_pemilu   = 0;
 
-$query_total_pemilih = "SELECT COUNT(*) as total FROM users WHERE role = 'user'";
-$result_pemilih = mysqli_query($conn, $query_total_pemilih);
-$total_pemilih = mysqli_fetch_assoc($result_pemilih)['total'];
+// Total kandidat
+$q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM kandidat");
+if ($q) {
+    $row = mysqli_fetch_assoc($q);
+    $total_kandidat = (int)$row['total'];
+}
 
-$query_total_suara = "SELECT COUNT(*) as total FROM voting";
-$result_suara = mysqli_query($conn, $query_total_suara);
-$total_suara = mysqli_fetch_assoc($result_suara)['total'];
+// Total pemilih
+$q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM users WHERE role = 'user'");
+if ($q) {
+    $row = mysqli_fetch_assoc($q);
+    $total_pemilih = (int)$row['total'];
+}
 
-$query_total_pemilu = "SELECT COUNT(*) as total FROM elections";
-$result_pemilu_count = mysqli_query($conn, $query_total_pemilu);
-$total_pemilu = mysqli_fetch_assoc($result_pemilu_count)['total'];
+// Total suara
+$q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM voting");
+if ($q) {
+    $row = mysqli_fetch_assoc($q);
+    $total_suara = (int)$row['total'];
+}
 
-$persentase_partisipasi = $total_pemilih > 0 ? round(($total_suara / $total_pemilih) * 100, 2) : 0;
+// Total pemilu
+$q = mysqli_query($conn, "SELECT COUNT(*) AS total FROM elections");
+if ($q) {
+    $row = mysqli_fetch_assoc($q);
+    $total_pemilu = (int)$row['total'];
+}
+
+// Persentase partisipasi
+$persentase_partisipasi = ($total_pemilih > 0)
+    ? round(($total_suara / $total_pemilih) * 100, 2)
+    : 0;
+
 
 // Ambil flash message
 $flash = get_flash_message();
+// =============================
+// AMBIL DAFTAR PEMILU TERBARU
+$query_pemilu_list = "
+    SELECT 
+        e.*,
+        COUNT(DISTINCT k.id_kandidat) AS jumlah_kandidat,
+        COUNT(DISTINCT v.id_voting) AS jumlah_suara
+    FROM elections e
+    LEFT JOIN kandidat k ON k.id_election = e.id_election
+    LEFT JOIN voting v ON v.id_election = e.id_election
+    GROUP BY e.id_election
+    ORDER BY e.created_at DESC
+    LIMIT 5
+";
 
-// Ambil daftar pemilu terbaru
-$query_pemilu_list = "SELECT e.*, 
-                      (SELECT COUNT(*) FROM kandidat WHERE id_election = e.id_election) as jumlah_kandidat,
-                      (SELECT COUNT(*) FROM voting WHERE id_election = e.id_election) as jumlah_suara
-                      FROM elections e
-                      ORDER BY e.created_at DESC
-                      LIMIT 5";
+
 $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,42 +85,86 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
+
 <body class="admin-page">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-brand">
-            🗳️ Sistem Pemilu - Admin
-        </div>
-        <div class="navbar-menu">
-            <a href="index.php" class="active">Dashboard</a>
-            <a href="pemilu.php">Pemilu</a>
-            <a href="kandidat.php">Kandidat</a>
-            <a href="pemilih.php">Pemilih</a>
-            <a href="hasil.php">Hasil</a>
-            <a href="profil.php">Profil</a>
-            <a href="logout.php" style="background-color: rgba(255,255,255,0.2);">Logout</a>
-        </div>
-        <div class="navbar-user">
-            <div class="user-info">
-                <div class="user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
-                <div class="user-role">Administrator</div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🗳️</div>
+            <div>
+                <div class="sidebar-title">Sistem Pemilu</div>
+                <div class="sidebar-subtitle">Administrator</div>
             </div>
         </div>
-    </nav>
 
-    <!-- Container -->
-    <div class="container">
+        <nav class="sidebar-nav">
+            <a href="index.php" class="sidebar-nav-item active">
+                <span class="sidebar-nav-icon">📊</span>
+                Dashboard
+            </a>
+            <a href="pemilu.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📋</span>
+                Pemilu
+            </a>
+            <a href="kandidat.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">👥</span>
+                Kandidat
+            </a>
+            <a href="pemilih.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">🙋</span>
+                Pemilih
+            </a>
+            <a href="hasil.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📈</span>
+                Hasil
+            </a>
+            <a href="profil.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">⚙️</span>
+                Profil
+            </a>
+        </nav>
+
+        <div class="sidebar-user">
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-avatar">
+                    <?php echo strtoupper(substr($_SESSION['nama_lengkap'], 0, 1)); ?>
+                </div>
+                <div>
+                    <div class="sidebar-user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
+                    <div class="sidebar-user-role">Administrator</div>
+                </div>
+            </div>
+            <a href="logout.php" class="sidebar-logout">Logout</a>
+        </div>
+    </aside>
+
+    <!-- Mobile Toggle -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
         <?php if ($flash): ?>
             <div class="alert alert-<?php echo $flash['type']; ?>">
                 <?php echo $flash['message']; ?>
             </div>
         <?php endif; ?>
 
+        <!-- Header -->
+        <div class="main-header">
+            <div>
+                <h1 class="main-title">Dashboard</h1>
+                <p style="color: var(--gray-600); margin-top: 8px;">
+                    Selamat datang, <?php echo $_SESSION['nama_lengkap']; ?>!
+                </p>
+            </div>
+        </div>
+
         <!-- Dashboard Grid -->
         <div class="dashboard-grid">
             <!-- Total Pemilu -->
-            <div class="stats-card">
-                <div class="stats-icon blue">
+            <div class="stats-card red">
+                <div class="stats-icon red">
                     <span>📋</span>
                 </div>
                 <div class="stats-info">
@@ -100,7 +174,7 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
             </div>
 
             <!-- Total Kandidat -->
-            <div class="stats-card">
+            <div class="stats-card green">
                 <div class="stats-icon green">
                     <span>👥</span>
                 </div>
@@ -111,7 +185,7 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
             </div>
 
             <!-- Total Pemilih -->
-            <div class="stats-card">
+            <div class="stats-card orange">
                 <div class="stats-icon orange">
                     <span>🙋</span>
                 </div>
@@ -122,8 +196,8 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
             </div>
 
             <!-- Total Suara Masuk -->
-            <div class="stats-card">
-                <div class="stats-icon purple">
+            <div class="stats-card blue">
+                <div class="stats-icon blue">
                     <span>🗳️</span>
                 </div>
                 <div class="stats-info">
@@ -142,25 +216,25 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
                         Lihat Detail
                     </a>
                 </div>
-                
-                <h3 style="color: #667eea; margin-bottom: 10px;">
+
+                <h3 style="color: var(--kpu-red); margin-bottom: 10px; font-size: 1.6em;">
                     <?php echo $active_election['nama_pemilu']; ?>
                 </h3>
-                <p style="color: #666; margin-bottom: 15px;">
+                <p style="color: var(--gray-600); margin-bottom: 20px;">
                     <?php echo $active_election['deskripsi']; ?>
                 </p>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">📅 Dimulai:</strong><br>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                    <div style="background: var(--gray-50); padding: 16px; border-radius: var(--radius); border-left: 4px solid var(--kpu-red);">
+                        <strong style="color: var(--kpu-red); display: block; margin-bottom: 8px;">📅 Dimulai:</strong>
                         <?php echo date('d F Y, H:i', strtotime($active_election['tanggal_mulai'])); ?>
                     </div>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">📅 Berakhir:</strong><br>
+                    <div style="background: var(--gray-50); padding: 16px; border-radius: var(--radius); border-left: 4px solid var(--kpu-red);">
+                        <strong style="color: var(--kpu-red); display: block; margin-bottom: 8px;">📅 Berakhir:</strong>
                         <?php echo date('d F Y, H:i', strtotime($active_election['tanggal_selesai'])); ?>
                     </div>
-                </div> 
-                
+                </div>
+
                 <?php
                 // Hitung statistik pemilu aktif
                 $query_kandidat_aktif = "SELECT COUNT(*) as total FROM kandidat WHERE id_election = ?";
@@ -168,18 +242,18 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
                 mysqli_stmt_bind_param($stmt, "i", $active_election['id_election']);
                 mysqli_stmt_execute($stmt);
                 $kandidat_aktif = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt))['total'];
-                
+
                 $query_suara_aktif = "SELECT COUNT(*) as total FROM voting WHERE id_election = ?";
                 $stmt = mysqli_prepare($conn, $query_suara_aktif);
                 mysqli_stmt_bind_param($stmt, "i", $active_election['id_election']);
                 mysqli_stmt_execute($stmt);
                 $suara_aktif = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt))['total'];
-                
+
                 $partisipasi_aktif = $total_pemilih > 0 ? round(($suara_aktif / $total_pemilih) * 100, 2) : 0;
                 ?>
-                
-                <div class="dashboard-grid" style="margin-top: 20px;">
-                    <div class="stats-card">
+
+                <div class="dashboard-grid">
+                    <div class="stats-card blue">
                         <div class="stats-icon blue">
                             <span>👥</span>
                         </div>
@@ -188,8 +262,8 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
                             <p>Kandidat</p>
                         </div>
                     </div>
-                    
-                    <div class="stats-card">
+
+                    <div class="stats-card orange">
                         <div class="stats-icon orange">
                             <span>🗳️</span>
                         </div>
@@ -198,8 +272,8 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
                             <p>Suara Masuk</p>
                         </div>
                     </div>
-                    
-                    <div class="stats-card">
+
+                    <div class="stats-card green">
                         <div class="stats-icon green">
                             <span>📊</span>
                         </div>
@@ -214,7 +288,7 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
             <div class="content-card">
                 <div class="alert alert-info">
                     ℹ️ Tidak ada pemilu yang sedang berlangsung.
-                    <a href="tambah_pemilu.php" style="color: #667eea; font-weight: bold;">Buat pemilu baru →</a>
+                    <a href="tambah_pemilu.php" style="color: var(--kpu-red); font-weight: bold; margin-left: 8px;">Buat pemilu baru →</a>
                 </div>
             </div>
         <?php endif; ?>
@@ -223,11 +297,11 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
         <div class="content-card">
             <div class="content-header">
                 <h2 class="content-title">📋 Pemilu Terbaru</h2>
-                <a href="pemilu.php" style="color: #667eea; text-decoration: none;">
+                <a href="pemilu.php" style="color: var(--kpu-red); text-decoration: none; font-weight: 600;">
                     Lihat Semua →
                 </a>
             </div>
-            
+
             <?php if (mysqli_num_rows($result_pemilu_list) > 0): ?>
                 <div class="table-responsive">
                     <table>
@@ -242,7 +316,7 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while ($pemilu = mysqli_fetch_assoc($result_pemilu_list)): 
+                            <?php while ($pemilu = mysqli_fetch_assoc($result_pemilu_list)):
                                 $status_info = get_election_status($pemilu['id_election']);
                             ?>
                                 <tr>
@@ -250,20 +324,20 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
                                     <td><?php echo date('d/m/Y', strtotime($pemilu['tanggal_mulai'])); ?></td>
                                     <td>
                                         <?php if ($status_info['status_real'] == 'draft'): ?>
-                                            <span style="color: #6c757d;">📝 Draft</span>
+                                            <span class="badge badge-gray">📝 Draft</span>
                                         <?php elseif ($status_info['status_real'] == 'belum_dimulai'): ?>
-                                            <span style="color: #ffc107;">⏳ Belum Dimulai</span>
+                                            <span class="badge badge-warning">⏳ Belum Dimulai</span>
                                         <?php elseif ($status_info['status_real'] == 'berlangsung'): ?>
-                                            <span style="color: #28a745;">🟢 Berlangsung</span>
+                                            <span class="badge badge-success">🟢 Berlangsung</span>
                                         <?php else: ?>
-                                            <span style="color: #dc3545;">🔴 Selesai</span>
+                                            <span class="badge badge-danger">🔴 Selesai</span>
                                         <?php endif; ?>
                                     </td>
                                     <td><?php echo $pemilu['jumlah_kandidat']; ?></td>
-                                    <td><?php echo $pemilu['jumlah_suara']; ?></td>
+                                    <td><strong><?php echo $pemilu['jumlah_suara']; ?></strong></td>
                                     <td>
-                                        <a href="detail_pemilu.php?id=<?php echo $pemilu['id_election']; ?>" 
-                                           class="btn-action btn-view">
+                                        <a href="detail_pemilu.php?id=<?php echo $pemilu['id_election']; ?>"
+                                            class="btn-action btn-view">
                                             👁️ Detail
                                         </a>
                                     </td>
@@ -283,6 +357,24 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
                 </div>
             <?php endif; ?>
         </div>
-    </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggle = document.querySelector('.sidebar-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
 </html>

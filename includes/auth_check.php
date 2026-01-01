@@ -28,10 +28,4 @@ function check_user() {
     }
 }
 
-// HAPUS semua fungsi berikut karena sudah ada di config/database.php:
-// - has_voted()
-// - get_status_pemilu()
-// - is_voting_open()
-
-// Jika ada fungsi lain yang spesifik untuk autentikasi, tetap simpan di sini
 ?>
