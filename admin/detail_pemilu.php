@@ -59,97 +59,70 @@ $flash = get_flash_message();
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Pemilu - <?php echo $pemilu['nama_pemilu']; ?></title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <style>
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .detail-item {
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-        
-        .detail-item strong {
-            display: block;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-        
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-            margin: 20px 0;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #667eea;
-        }
-        
-        .timeline-item {
-            position: relative;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -25px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #667eea;
-        }
-        
-        .timeline-item.active::before {
-            background: #28a745;
-            box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
-        }
-        
-        .timeline-item.future::before {
-            background: #ffc107;
-        }
-    </style>
+
 </head>
+
 <body class="admin-page">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-brand">
-            🗳️ Sistem Pemilu - Admin
-        </div>
-        <div class="navbar-menu">
-            <a href="index.php">Dashboard</a>
-            <a href="pemilu.php" class="active">Pemilu</a>
-            <a href="kandidat.php">Kandidat</a>
-            <a href="pemilih.php">Pemilih</a>
-            <a href="hasil.php">Hasil</a>
-            <a href="profil.php">Profil</a>
-            <a href="logout.php" style="background-color: rgba(255,255,255,0.2);">Logout</a>
-        </div>
-        <div class="navbar-user">
-            <div class="user-info">
-                <div class="user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
-                <div class="user-role">Administrator</div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🗳️</div>
+            <div>
+                <div class="sidebar-title">Sistem Pemilu</div>
+                <div class="sidebar-subtitle">Administrator</div>
             </div>
         </div>
-    </nav>
+
+        <nav class="sidebar-nav">
+            <a href="index.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📊</span>
+                Dashboard
+            </a>
+            <a href="pemilu.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📋</span>
+                Pemilu
+            </a>
+            <a href="kandidat.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">👥</span>
+                Kandidat
+            </a>
+            <a href="pemilih.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">🙋</span>
+                Pemilih
+            </a>
+            <a href="hasil.php" class="sidebar-nav-item active">
+                <span class="sidebar-nav-icon">📈</span>
+                Hasil
+            </a>
+            <a href="profil.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">⚙️</span>
+                Profil
+            </a>
+        </nav>
+
+        <div class="sidebar-user">
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-avatar">
+                    <?php echo strtoupper(substr($_SESSION['nama_lengkap'], 0, 1)); ?>
+                </div>
+                <div>
+                    <div class="sidebar-user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
+                    <div class="sidebar-user-role">Administrator</div>
+                </div>
+            </div>
+            <a href="logout.php" class="sidebar-logout">🚪 Logout</a>
+        </div>
+    </aside>
+
+    <!-- Mobile Toggle -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
 
     <!-- Container -->
     <div class="container">
@@ -206,7 +179,7 @@ $flash = get_flash_message();
             <div class="stats-card">
                 <div class="stats-icon <?php echo ($status_info['status_real'] == 'berlangsung') ? 'green' : 'purple'; ?>">
                     <span>
-                        <?php 
+                        <?php
                         if ($status_info['status_real'] == 'draft') echo '📝';
                         elseif ($status_info['status_real'] == 'belum_dimulai') echo '⏳';
                         elseif ($status_info['status_real'] == 'berlangsung') echo '🟢';
@@ -216,7 +189,7 @@ $flash = get_flash_message();
                 </div>
                 <div class="stats-info">
                     <h3>
-                        <?php 
+                        <?php
                         if ($status_info['status_real'] == 'draft') echo 'Draft';
                         elseif ($status_info['status_real'] == 'belum_dimulai') echo 'Belum Mulai';
                         elseif ($status_info['status_real'] == 'berlangsung') echo 'Berlangsung';
@@ -233,7 +206,7 @@ $flash = get_flash_message();
                 </div>
                 <div class="stats-info">
                     <h3>
-                        <?php 
+                        <?php
                         $start = strtotime($pemilu['tanggal_mulai']);
                         $end = strtotime($pemilu['tanggal_selesai']);
                         $durasi = ($end - $start) / (60 * 60 * 24);
@@ -248,123 +221,124 @@ $flash = get_flash_message();
         <!-- Detail Informasi -->
         <div class="content-card">
             <h3>📋 Informasi Detail</h3>
-            
+
             <div class="detail-grid">
                 <div class="detail-item">
                     <strong>Tanggal Mulai</strong>
                     <?php echo date('d F Y, H:i', strtotime($pemilu['tanggal_mulai'])); ?>
                 </div>
-                
+
                 <div class="detail-item">
                     <strong>Tanggal Selesai</strong>
                     <?php echo date('d F Y, H:i', strtotime($pemilu['tanggal_selesai'])); ?>
                 </div>
-                
+
                 <div class="detail-item">
                     <strong>Dibuat Oleh</strong>
                     <?php echo $pemilu['creator']; ?>
                 </div>
-                
+
                 <div class="detail-item">
                     <strong>Tanggal Dibuat</strong>
                     <?php echo date('d F Y, H:i', strtotime($pemilu['created_at'])); ?>
                 </div>
             </div>
-            
+
             <!-- Timeline -->
             <h3 style="margin-top: 30px;">⏰ Timeline Pemilu</h3>
-        <div class="timeline">
+            <div class="timeline">
                 <div class="timeline-item <?php echo ($status_info['status_real'] == 'draft' || $status_info['status_real'] == 'belum_dimulai') ? 'future' : 'active'; ?>">
                     <strong>Pembuatan Pemilu</strong>
                     <p><?php echo date('d F Y, H:i', strtotime($pemilu['created_at'])); ?></p>
                 </div>
-                
-                <div class="timeline-item <?php echo ($status_info['status_real'] == 'belum_dimulai') ? 'future' : (($status_info['status_real'] == 'berlangsung' || $status_info['status_real'] == 'selesai') ? 'active': ''); ?>"><strong>Pemilu Dimulai</strong>
-                <p><?php echo date('d F Y, H:i', strtotime($pemilu['tanggal_mulai'])); ?></p>
+
+                <div class="timeline-item <?php echo ($status_info['status_real'] == 'belum_dimulai') ? 'future' : (($status_info['status_real'] == 'berlangsung' || $status_info['status_real'] == 'selesai') ? 'active' : ''); ?>"><strong>Pemilu Dimulai</strong>
+                    <p><?php echo date('d F Y, H:i', strtotime($pemilu['tanggal_mulai'])); ?></p>
                 </div>
-            <div class="timeline-item <?php echo ($status_info['status_real'] == 'selesai') ? 'active' : 'future'; ?>">
-                <strong>Pemilu Berakhir</strong>
-                <p><?php echo date('d F Y, H:i', strtotime($pemilu['tanggal_selesai'])); ?></p>
+                <div class="timeline-item <?php echo ($status_info['status_real'] == 'selesai') ? 'active' : 'future'; ?>">
+                    <strong>Pemilu Berakhir</strong>
+                    <p><?php echo date('d F Y, H:i', strtotime($pemilu['tanggal_selesai'])); ?></p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Hasil Pemilu -->
-    <div class="content-card">
-        <div class="content-header">
-            <h3 class="content-title">📊 Hasil Pemilu</h3>
-            <?php if ($total_suara > 0): ?>
-                <div class="action-buttons">
-                    <a href="export_hasil_pemilu.php?id=<?php echo $id_election; ?>" class="btn-action btn-add" target="_blank">
-                        📥 Export
-                    </a>
+        <!-- Hasil Pemilu -->
+        <div class="content-card">
+            <div class="content-header">
+                <h3 class="content-title">📊 Hasil Pemilu</h3>
+                <?php if ($total_suara > 0): ?>
+                    <div class="action-buttons">
+                        <a href="export_hasil_pemilu.php?id=<?php echo $id_election; ?>" class="btn-action btn-add" target="_blank">
+                            📥 Export
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php if (mysqli_num_rows($result_kandidat) > 0): ?>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Peringkat</th>
+                                <th>No. Urut</th>
+                                <th>Foto</th>
+                                <th>Nama Kandidat</th>
+                                <th>Jumlah Suara</th>
+                                <th>Persentase</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $peringkat = 1;
+                            mysqli_data_seek($result_kandidat, 0);
+                            while ($row = mysqli_fetch_assoc($result_kandidat)):
+                                $persentase = $total_suara > 0 ? round(($row['jumlah_suara'] / $total_suara) * 100, 2) : 0;
+                            ?>
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <?php if ($peringkat == 1 && $total_suara > 0): ?>
+                                            <span style="font-size: 1.5em;">🥇</span>
+                                        <?php elseif ($peringkat == 2): ?>
+                                            <span style="font-size: 1.5em;">🥈</span>
+                                        <?php elseif ($peringkat == 3): ?>
+                                            <span style="font-size: 1.5em;">🥉</span>
+                                        <?php else: ?>
+                                            <strong><?php echo $peringkat; ?></strong>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><strong><?php echo $row['nomor_urut']; ?></strong></td>
+                                    <td>
+                                        <img src="../assets/img/kandidat/<?php echo $row['foto']; ?>"
+                                            alt="<?php echo $row['nama_kandidat']; ?>">
+                                    </td>
+                                    <td><?php echo $row['nama_kandidat']; ?></td>
+                                    <td><strong><?php echo $row['jumlah_suara']; ?> suara</strong></td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div style="flex: 1; background-color: #e0e0e0; height: 25px; border-radius: 12px; overflow: hidden;">
+                                                <div style="width: <?php echo $persentase; ?>%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%;"></div>
+                                            </div>
+                                            <span style="min-width: 50px;"><strong><?php echo $persentase; ?>%</strong></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php
+                                $peringkat++;
+                            endwhile;
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <div class="empty-state">
+                    <div class="empty-state-icon">👥</div>
+                    <h3>Belum Ada Kandidat</h3>
+                    <p>Silakan tambahkan kandidat untuk pemilu ini</p>
                 </div>
             <?php endif; ?>
         </div>
-
-        <?php if (mysqli_num_rows($result_kandidat) > 0): ?>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Peringkat</th>
-                            <th>No. Urut</th>
-                            <th>Foto</th>
-                            <th>Nama Kandidat</th>
-                            <th>Jumlah Suara</th>
-                            <th>Persentase</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                        $peringkat = 1;
-                        mysqli_data_seek($result_kandidat, 0);
-                        while ($row = mysqli_fetch_assoc($result_kandidat)): 
-                            $persentase = $total_suara > 0 ? round(($row['jumlah_suara'] / $total_suara) * 100, 2) : 0;
-                        ?>
-                            <tr>
-                                <td style="text-align: center;">
-                                    <?php if ($peringkat == 1 && $total_suara > 0): ?>
-                                        <span style="font-size: 1.5em;">🥇</span>
-                                    <?php elseif ($peringkat == 2): ?>
-                                        <span style="font-size: 1.5em;">🥈</span>
-                                    <?php elseif ($peringkat == 3): ?>
-                                        <span style="font-size: 1.5em;">🥉</span>
-                                    <?php else: ?>
-                                        <strong><?php echo $peringkat; ?></strong>
-                                    <?php endif; ?>
-                                </td>
-                                <td><strong><?php echo $row['nomor_urut']; ?></strong></td>
-                                <td>
-                                    <img src="../assets/img/kandidat/<?php echo $row['foto']; ?>" 
-                                         alt="<?php echo $row['nama_kandidat']; ?>">
-                                </td>
-                                <td><?php echo $row['nama_kandidat']; ?></td>
-                                <td><strong><?php echo $row['jumlah_suara']; ?> suara</strong></td>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <div style="flex: 1; background-color: #e0e0e0; height: 25px; border-radius: 12px; overflow: hidden;">
-                                            <div style="width: <?php echo $persentase; ?>%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%;"></div>
-                                        </div>
-                                        <span style="min-width: 50px;"><strong><?php echo $persentase; ?>%</strong></span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php 
-                        $peringkat++;
-                        endwhile; 
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-        <?php else: ?>
-            <div class="empty-state">
-                <div class="empty-state-icon">👥</div>
-                <h3>Belum Ada Kandidat</h3>
-                <p>Silakan tambahkan kandidat untuk pemilu ini</p>
-            </div>
-        <?php endif; ?>
     </div>
-</div>
 </body>
+
 </html>

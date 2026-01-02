@@ -121,27 +121,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body class="admin-page">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-brand">
-            🗳️ Sistem Pemilu - Admin
+   <!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">🗳️</div>
+        <div>
+            <div class="sidebar-title">Sistem Pemilu</div>
+            <div class="sidebar-subtitle">Administrator</div>
         </div>
-        <div class="navbar-menu">
-            <a href="index.php">Dashboard</a>
-            <a href="pemilu.php">Pemilu</a>
-            <a href="kandidat.php" class="active">Kandidat</a>
-            <a href="pemilih.php">Pemilih</a>
-            <a href="hasil.php">Hasil</a>
-            <a href="profil.php">Profil</a>
-            <a href="logout.php" style="background-color: rgba(255,255,255,0.2);">Logout</a>
-        </div>
-        <div class="navbar-user">
-            <div class="user-info">
-                <div class="user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
-                <div class="user-role">Administrator</div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <a href="index.php" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon">📊</span>
+            Dashboard
+        </a>
+        <a href="pemilu.php" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon">📋</span>
+            Pemilu
+        </a>
+        <a href="kandidat.php" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon">👥</span>
+            Kandidat
+        </a>
+        <a href="pemilih.php" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon">🙋</span>
+            Pemilih
+        </a>
+        <a href="hasil.php" class="sidebar-nav-item">
+            <span class="sidebar-nav-icon">📈</span>
+            Hasil
+        </a>
+        <a href="profil.php" class="sidebar-nav-item active">
+            <span class="sidebar-nav-icon">⚙️</span>
+            Profil
+        </a>
+    </nav>
+    
+    <div class="sidebar-user">
+        <div class="sidebar-user-info">
+            <div class="sidebar-user-avatar">
+                <?php echo strtoupper(substr($_SESSION['nama_lengkap'], 0, 1)); ?>
+            </div>
+            <div>
+                <div class="sidebar-user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
+                <div class="sidebar-user-role">Administrator</div>
             </div>
         </div>
-    </nav>
+        <a href="logout.php" class="sidebar-logout">🚪 Logout</a>
+    </div>
+</aside>
+
+<!-- Mobile Toggle -->
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
 
     <!-- Container -->
     <div class="container">
