@@ -13,4 +13,3 @@ session_destroy();
 session_start();
 set_flash_message('success', 'Anda berhasil logout!');
 redirect('../auth/login.php');
-?>

@@ -377,4 +377,5 @@ $result_pemilu_list = mysqli_query($conn, $query_pemilu_list);
         });
     </script>
 </body>
+
 </html>

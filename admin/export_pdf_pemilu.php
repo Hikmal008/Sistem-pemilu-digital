@@ -58,6 +58,7 @@ $persentase_partisipasi = $total_pemilih > 0 ? round(($total_suara / $total_pemi
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,14 +66,15 @@ $persentase_partisipasi = $total_pemilih > 0 ? round(($total_suara / $total_pemi
     <link rel="stylesheet" href="../assets/css/cetak.css" media="all">
 
 </head>
+
 <body>
     <div class="no-print" style="display: flex; gap: 10px; margin-bottom: 20px;">
-    <button onclick="window.print()" class="print-btn">
-        🖨️ Cetak / Simpan PDF
-    </button>
-    <a href="hasil.php" class="print-btn" style="background: #6c757d; text-decoration: none; display: inline-block; text-align: center;">
-        ← Kembali ke Hasil
-    </a>
+        <button onclick="window.print()" class="print-btn">
+            🖨️ Cetak / Simpan PDF
+        </button>
+        <a href="hasil.php" class="print-btn" style="background: #6c757d; text-decoration: none; display: inline-block; text-align: center;">
+            ← Kembali ke Hasil
+        </a>
     </div>
     <div class="header">
         <h1>LAPORAN HASIL PEMILU</h1>
@@ -126,10 +128,10 @@ $persentase_partisipasi = $total_pemilih > 0 ? round(($total_suara / $total_pemi
             </tr>
         </thead>
         <tbody>
-            <?php 
+            <?php
             $peringkat = 1;
             mysqli_data_seek($result, 0);
-            while ($row = mysqli_fetch_assoc($result)): 
+            while ($row = mysqli_fetch_assoc($result)):
                 $persentase = $total_suara > 0 ? round(($row['jumlah_suara'] / $total_suara) * 100, 2) : 0;
             ?>
                 <tr>
@@ -156,9 +158,9 @@ $persentase_partisipasi = $total_pemilih > 0 ? round(($total_suara / $total_pemi
                         <?php endif; ?>
                     </td>
                 </tr>
-            <?php 
-            $peringkat++;
-            endwhile; 
+            <?php
+                $peringkat++;
+            endwhile;
             ?>
         </tbody>
     </table>
@@ -170,11 +172,12 @@ $persentase_partisipasi = $total_pemilih > 0 ? round(($total_suara / $total_pemi
             <li>Data diurutkan berdasarkan perolehan suara tertinggi</li>
             <li>Persentase dihitung dari total suara yang masuk</li>
         </ul>
-        
+
         <p style="margin-top: 30px;">
             <strong>Dicetak oleh:</strong> <?php echo $_SESSION['nama_lengkap']; ?> (Administrator)<br>
             <strong>Tanggal:</strong> <?php echo date('d F Y, H:i:s'); ?>
         </p>
     </div>
 </body>
+
 </html>

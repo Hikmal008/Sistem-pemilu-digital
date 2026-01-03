@@ -84,6 +84,7 @@ $flash = get_flash_message();
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -91,159 +92,161 @@ $flash = get_flash_message();
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
+
 <body class="admin-page">
-<!-- Sidebar -->
-<aside class="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-logo">🗳️</div>
-        <div>
-            <div class="sidebar-title">Sistem Pemilu</div>
-            <div class="sidebar-subtitle">Administrator</div>
-        </div>
-    </div>
-    
-    <nav class="sidebar-nav">
-        <a href="index.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">📊</span>
-            Dashboard
-        </a>
-        <a href="pemilu.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">📋</span>
-            Pemilu
-        </a>
-        <a href="kandidat.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">👥</span>
-            Kandidat
-        </a>
-        <a href="pemilih.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">🙋</span>
-            Pemilih
-        </a>
-        <a href="hasil.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">📈</span>
-            Hasil
-        </a>
-        <a href="profil.php" class="sidebar-nav-item active">
-            <span class="sidebar-nav-icon">⚙️</span>
-            Profil
-        </a>
-    </nav>
-    
-    <div class="sidebar-user">
-        <div class="sidebar-user-info">
-            <div class="sidebar-user-avatar">
-                <?php echo strtoupper(substr($_SESSION['nama_lengkap'], 0, 1)); ?>
-            </div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🗳️</div>
             <div>
-                <div class="sidebar-user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
-                <div class="sidebar-user-role">Administrator</div>
+                <div class="sidebar-title">Sistem Pemilu</div>
+                <div class="sidebar-subtitle">Administrator</div>
             </div>
         </div>
-        <a href="logout.php" class="sidebar-logout">🚪 Logout</a>
-    </div>
-</aside>
 
-<!-- Mobile Toggle -->
-<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <nav class="sidebar-nav">
+            <a href="index.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📊</span>
+                Dashboard
+            </a>
+            <a href="pemilu.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📋</span>
+                Pemilu
+            </a>
+            <a href="kandidat.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">👥</span>
+                Kandidat
+            </a>
+            <a href="pemilih.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">🙋</span>
+                Pemilih
+            </a>
+            <a href="hasil.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📈</span>
+                Hasil
+            </a>
+            <a href="profil.php" class="sidebar-nav-item active">
+                <span class="sidebar-nav-icon">⚙️</span>
+                Profil
+            </a>
+        </nav>
 
-<!-- Main Content -->
-<main class="main-content">
-    
-    <?php if ($flash): ?>
-        <div class="alert alert-<?php echo $flash['type']; ?>">
-            <?php echo $flash['message']; ?>
+        <div class="sidebar-user">
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-avatar">
+                    <?php echo strtoupper(substr($_SESSION['nama_lengkap'], 0, 1)); ?>
+                </div>
+                <div>
+                    <div class="sidebar-user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
+                    <div class="sidebar-user-role">Administrator</div>
+                </div>
+            </div>
+            <a href="logout.php" class="sidebar-logout">🚪 Logout</a>
         </div>
-    <?php endif; ?>
+    </aside>
 
-    <!-- Header -->
-    <div class="main-header">
-        <h1 class="main-title">Profil Saya</h1>
-    </div>
+    <!-- Mobile Toggle -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
 
-    <div class="content-card">
-        <?php if (isset($errors) && count($errors) > 0): ?>
-            <div class="alert alert-danger">
-                <ul style="margin: 0; padding-left: 20px;">
-                    <?php foreach ($errors as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <?php if ($flash): ?>
+            <div class="alert alert-<?php echo $flash['type']; ?>">
+                <?php echo $flash['message']; ?>
             </div>
         <?php endif; ?>
 
-        <form action="" method="POST">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" value="<?php echo $user['username']; ?>" disabled 
-                       style="background-color: var(--gray-100); cursor: not-allowed;">
-                <div class="password-info">Username tidak dapat diubah</div>
-            </div>
+        <!-- Header -->
+        <div class="main-header">
+            <h1 class="main-title">Profil Saya</h1>
+        </div>
 
-            <div class="form-group">
-                <label for="nama_lengkap">Nama Lengkap <span>*</span></label>
-                <input type="text" id="nama_lengkap" name="nama_lengkap" required 
-                       value="<?php echo $user['nama_lengkap']; ?>">
-            </div>
+        <div class="content-card">
+            <?php if (isset($errors) && count($errors) > 0): ?>
+                <div class="alert alert-danger">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
 
-            <div class="form-group">
-                <label for="email">Email <span>*</span></label>
-                <input type="email" id="email" name="email" required 
-                       value="<?php echo $user['email']; ?>">
-            </div>
+            <form action="" method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" value="<?php echo $user['username']; ?>" disabled
+                        style="background-color: var(--gray-100); cursor: not-allowed;">
+                    <div class="password-info">Username tidak dapat diubah</div>
+                </div>
 
-            <div class="form-group">
-                <label for="nik">NIK</label>
-                <input type="text" id="nik" value="<?php echo $user['nik']; ?>" disabled 
-                       style="background-color: var(--gray-100); cursor: not-allowed;">
-                <div class="password-info">NIK tidak dapat diubah</div>
-            </div>
+                <div class="form-group">
+                    <label for="nama_lengkap">Nama Lengkap <span>*</span></label>
+                    <input type="text" id="nama_lengkap" name="nama_lengkap" required
+                        value="<?php echo $user['nama_lengkap']; ?>">
+                </div>
 
-            <div class="form-group">
-                <label for="tanggal_lahir">Tanggal Lahir</label>
-                <input type="date" id="tanggal_lahir" value="<?php echo $user['tanggal_lahir']; ?>" disabled 
-                       style="background-color: var(--gray-100); cursor: not-allowed;">
-                <div class="password-info">Tanggal lahir tidak dapat diubah</div>
-            </div>
+                <div class="form-group">
+                    <label for="email">Email <span>*</span></label>
+                    <input type="email" id="email" name="email" required
+                        value="<?php echo $user['email']; ?>">
+                </div>
 
-            <div class="form-group">
-                <label for="alamat">Alamat <span>*</span></label>
-                <textarea id="alamat" name="alamat" required><?php echo $user['alamat']; ?></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="nik">NIK</label>
+                    <input type="text" id="nik" value="<?php echo $user['nik']; ?>" disabled
+                        style="background-color: var(--gray-100); cursor: not-allowed;">
+                    <div class="password-info">NIK tidak dapat diubah</div>
+                </div>
 
-            <div class="form-group">
-                <label for="role">Role</label>
-                <input type="text" id="role" value="Administrator" disabled 
-                       style="background-color: var(--gray-100); cursor: not-allowed;">
-            </div>
+                <div class="form-group">
+                    <label for="tanggal_lahir">Tanggal Lahir</label>
+                    <input type="date" id="tanggal_lahir" value="<?php echo $user['tanggal_lahir']; ?>" disabled
+                        style="background-color: var(--gray-100); cursor: not-allowed;">
+                    <div class="password-info">Tanggal lahir tidak dapat diubah</div>
+                </div>
 
-            <div class="action-buttons">
-                <button type="submit" class="btn btn-primary">
-                    💾 Simpan Perubahan
-                </button>
-                <a href="ubah_password.php" class="btn btn-secondary">
-                    🔐 Ubah Password
-                </a>
-            </div>
-        </form>
-    </div>
-    
-</main>
+                <div class="form-group">
+                    <label for="alamat">Alamat <span>*</span></label>
+                    <textarea id="alamat" name="alamat" required><?php echo $user['alamat']; ?></textarea>
+                </div>
 
-<script>
-    function toggleSidebar() {
-        document.querySelector('.sidebar').classList.toggle('active');
-    }
-    
-    document.addEventListener('click', function(event) {
-        const sidebar = document.querySelector('.sidebar');
-        const toggle = document.querySelector('.sidebar-toggle');
-        
-        if (window.innerWidth <= 768) {
-            if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
-                sidebar.classList.remove('active');
-            }
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <input type="text" id="role" value="Administrator" disabled
+                        style="background-color: var(--gray-100); cursor: not-allowed;">
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        💾 Simpan Perubahan
+                    </button>
+                    <a href="ubah_password.php" class="btn btn-secondary">
+                        🔐 Ubah Password
+                    </a>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
         }
-    });
-</script>
+
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggle = document.querySelector('.sidebar-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>

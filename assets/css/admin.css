@@ -525,26 +525,6 @@ table img {
     transform: translateY(0);
   }
 }
-/* ==================== DETAIL PEMILU ==================== */
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin: 20px 0;
-}
-
-.detail-item {
-  padding: 15px;
-  background: var(--gray-50);
-  border-radius: var(--radius);
-}
-
-.detail-item strong {
-  display: block;
-  color: var(--primary);
-  margin-bottom: 5px;
-}
 
 /* ==================== TIMELINE ==================== */
 
@@ -588,6 +568,66 @@ table img {
 
 .timeline-item.future::before {
   background: var(--warning);
+}
+/* ===== DETAIL PEMILU ===== */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.detail-item {
+  background: var(--gray-50);
+  padding: 16px;
+  border-radius: var(--radius);
+  border-left: 4px solid var(--kpu-red);
+}
+
+.detail-item strong {
+  display: block;
+  color: var(--kpu-red);
+  margin-bottom: 6px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+  margin-top: 20px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--kpu-red);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -25px;
+  top: 5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--kpu-red);
+}
+
+.timeline-item.future::before {
+  background: var(--warning);
+}
+
+.timeline-item.active::before {
+  background: var(--success);
 }
 
 /* ==================== RESPONSIVE ==================== */

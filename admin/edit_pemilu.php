@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,153 +100,155 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
+
 <body class="admin-page">
-<!-- Sidebar -->
-<aside class="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-logo">🗳️</div>
-        <div>
-            <div class="sidebar-title">Sistem Pemilu</div>
-            <div class="sidebar-subtitle">Administrator</div>
-        </div>
-    </div>
-    
-    <nav class="sidebar-nav">
-        <a href="index.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">📊</span>
-            Dashboard
-        </a>
-        <a href="pemilu.php" class="sidebar-nav-item active">
-            <span class="sidebar-nav-icon">📋</span>
-            Pemilu
-        </a>
-        <a href="kandidat.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">👥</span>
-            Kandidat
-        </a>
-        <a href="pemilih.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">🙋</span>
-            Pemilih
-        </a>
-        <a href="hasil.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">📈</span>
-            Hasil
-        </a>
-        <a href="profil.php" class="sidebar-nav-item">
-            <span class="sidebar-nav-icon">⚙️</span>
-            Profil
-        </a>
-    </nav>
-    
-    <div class="sidebar-user">
-        <div class="sidebar-user-info">
-            <div class="sidebar-user-avatar">
-                <?php echo strtoupper(substr($_SESSION['nama_lengkap'], 0, 1)); ?>
-            </div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🗳️</div>
             <div>
-                <div class="sidebar-user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
-                <div class="sidebar-user-role">Administrator</div>
+                <div class="sidebar-title">Sistem Pemilu</div>
+                <div class="sidebar-subtitle">Administrator</div>
             </div>
         </div>
-        <a href="logout.php" class="sidebar-logout">🚪 Logout</a>
-    </div>
-</aside>
 
-<!-- Mobile Toggle -->
-<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <nav class="sidebar-nav">
+            <a href="index.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📊</span>
+                Dashboard
+            </a>
+            <a href="pemilu.php" class="sidebar-nav-item active">
+                <span class="sidebar-nav-icon">📋</span>
+                Pemilu
+            </a>
+            <a href="kandidat.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">👥</span>
+                Kandidat
+            </a>
+            <a href="pemilih.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">🙋</span>
+                Pemilih
+            </a>
+            <a href="hasil.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">📈</span>
+                Hasil
+            </a>
+            <a href="profil.php" class="sidebar-nav-item">
+                <span class="sidebar-nav-icon">⚙️</span>
+                Profil
+            </a>
+        </nav>
 
-<!-- Main Content -->
-<main class="main-content">
-    
-    <!-- Header -->
-    <div class="main-header">
-        <h1 class="main-title">Edit Pemilu</h1>
-        <a href="pemilu.php" class="btn btn-secondary">
-            ← Kembali
-        </a>
-    </div>
-
-    <div class="content-card">
-        <?php if (isset($errors) && count($errors) > 0): ?>
-            <div class="alert alert-danger">
-                <ul style="margin: 0; padding-left: 20px;">
-                    <?php foreach ($errors as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
+        <div class="sidebar-user">
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-avatar">
+                    <?php echo strtoupper(substr($_SESSION['nama_lengkap'], 0, 1)); ?>
+                </div>
+                <div>
+                    <div class="sidebar-user-name"><?php echo $_SESSION['nama_lengkap']; ?></div>
+                    <div class="sidebar-user-role">Administrator</div>
+                </div>
             </div>
-        <?php endif; ?>
+            <a href="logout.php" class="sidebar-logout">🚪 Logout</a>
+        </div>
+    </aside>
 
-        <form action="" method="POST">
-            <div class="form-group">
-                <label for="nama_pemilu">Nama Pemilu <span>*</span></label>
-                <input type="text" id="nama_pemilu" name="nama_pemilu" required 
-                       value="<?php echo $pemilu['nama_pemilu']; ?>">
-            </div>
+    <!-- Mobile Toggle -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
 
-            <div class="form-group">
-                <label for="deskripsi">Deskripsi</label>
-                <textarea id="deskripsi" name="deskripsi" rows="4"><?php echo $pemilu['deskripsi']; ?></textarea>
-            </div>
+    <!-- Main Content -->
+    <main class="main-content">
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Header -->
+        <div class="main-header">
+            <h1 class="main-title">Edit Pemilu</h1>
+            <a href="pemilu.php" class="btn btn-secondary">
+                ← Kembali
+            </a>
+        </div>
+
+        <div class="content-card">
+            <?php if (isset($errors) && count($errors) > 0): ?>
+                <div class="alert alert-danger">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
+            <form action="" method="POST">
                 <div class="form-group">
-                    <label for="tanggal_mulai">Tanggal & Waktu Mulai <span>*</span></label>
-                    <input type="datetime-local" id="tanggal_mulai" name="tanggal_mulai" required
-                           value="<?php echo date('Y-m-d\TH:i', strtotime($pemilu['tanggal_mulai'])); ?>"
-                           <?php echo ($status_info['status_real'] == 'berlangsung') ? 'readonly style="background-color: var(--gray-100);"' : ''; ?>>
-                    <?php if ($status_info['status_real'] == 'berlangsung'): ?>
-                        <div class="password-info">Tidak dapat mengubah tanggal mulai pada pemilu yang sedang berlangsung</div>
-                    <?php endif; ?>
+                    <label for="nama_pemilu">Nama Pemilu <span>*</span></label>
+                    <input type="text" id="nama_pemilu" name="nama_pemilu" required
+                        value="<?php echo $pemilu['nama_pemilu']; ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="tanggal_selesai">Tanggal & Waktu Selesai <span>*</span></label>
-                    <input type="datetime-local" id="tanggal_selesai" name="tanggal_selesai" required
-                           value="<?php echo date('Y-m-d\TH:i', strtotime($pemilu['tanggal_selesai'])); ?>">
+                    <label for="deskripsi">Deskripsi</label>
+                    <textarea id="deskripsi" name="deskripsi" rows="4"><?php echo $pemilu['deskripsi']; ?></textarea>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="status">Status Pemilu <span>*</span></label>
-                <select id="status" name="status" required>
-                    <option value="draft" <?php echo ($pemilu['status'] == 'draft') ? 'selected' : ''; ?>>
-                        Draft (Belum Dipublikasikan)
-                    </option>
-                    <option value="aktif" <?php echo ($pemilu['status'] == 'aktif') ? 'selected' : ''; ?>>
-                        Aktif (Dipublikasikan)
-                    </option>
-                </select>
-            </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="tanggal_mulai">Tanggal & Waktu Mulai <span>*</span></label>
+                        <input type="datetime-local" id="tanggal_mulai" name="tanggal_mulai" required
+                            value="<?php echo date('Y-m-d\TH:i', strtotime($pemilu['tanggal_mulai'])); ?>"
+                            <?php echo ($status_info['status_real'] == 'berlangsung') ? 'readonly style="background-color: var(--gray-100);"' : ''; ?>>
+                        <?php if ($status_info['status_real'] == 'berlangsung'): ?>
+                            <div class="password-info">Tidak dapat mengubah tanggal mulai pada pemilu yang sedang berlangsung</div>
+                        <?php endif; ?>
+                    </div>
 
-            <div class="action-buttons">
-                <button type="submit" class="btn btn-primary">
-                    💾 Update Pemilu
-                </button>
-                <a href="pemilu.php" class="btn btn-secondary">
-                    ❌ Batal
-                </a>
-            </div>
-        </form>
-    </div>
-    
-</main>
+                    <div class="form-group">
+                        <label for="tanggal_selesai">Tanggal & Waktu Selesai <span>*</span></label>
+                        <input type="datetime-local" id="tanggal_selesai" name="tanggal_selesai" required
+                            value="<?php echo date('Y-m-d\TH:i', strtotime($pemilu['tanggal_selesai'])); ?>">
+                    </div>
+                </div>
 
-<script>
-    function toggleSidebar() {
-        document.querySelector('.sidebar').classList.toggle('active');
-    }
-    
-    document.addEventListener('click', function(event) {
-        const sidebar = document.querySelector('.sidebar');
-        const toggle = document.querySelector('.sidebar-toggle');
-        
-        if (window.innerWidth <= 768) {
-            if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
-                sidebar.classList.remove('active');
-            }
+                <div class="form-group">
+                    <label for="status">Status Pemilu <span>*</span></label>
+                    <select id="status" name="status" required>
+                        <option value="draft" <?php echo ($pemilu['status'] == 'draft') ? 'selected' : ''; ?>>
+                            Draft (Belum Dipublikasikan)
+                        </option>
+                        <option value="aktif" <?php echo ($pemilu['status'] == 'aktif') ? 'selected' : ''; ?>>
+                            Aktif (Dipublikasikan)
+                        </option>
+                    </select>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        💾 Update Pemilu
+                    </button>
+                    <a href="pemilu.php" class="btn btn-secondary">
+                        ❌ Batal
+                    </a>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
         }
-    });
-</script>
+
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggle = document.querySelector('.sidebar-toggle');
+
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>

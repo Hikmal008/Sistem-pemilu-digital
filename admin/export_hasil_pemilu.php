@@ -65,6 +65,7 @@ header("Expires: 0");
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Hasil Pemilu - <?php echo $election['nama_pemilu']; ?></title>
@@ -73,25 +74,31 @@ header("Expires: 0");
             border-collapse: collapse;
             width: 100%;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid black;
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #667eea;
             color: white;
             font-weight: bold;
         }
+
         .header {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .info {
             margin-bottom: 20px;
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>LAPORAN HASIL PEMILU</h1>
@@ -143,9 +150,9 @@ header("Expires: 0");
             </tr>
         </thead>
         <tbody>
-            <?php 
+            <?php
             $peringkat = 1;
-            while ($row = mysqli_fetch_assoc($result)): 
+            while ($row = mysqli_fetch_assoc($result)):
                 $persentase = $total_suara > 0 ? round(($row['jumlah_suara'] / $total_suara) * 100, 2) : 0;
             ?>
                 <tr>
@@ -157,9 +164,9 @@ header("Expires: 0");
                     <td><?php echo $row['jumlah_suara']; ?></td>
                     <td><?php echo $persentase; ?>%</td>
                 </tr>
-            <?php 
-            $peringkat++;
-            endwhile; 
+            <?php
+                $peringkat++;
+            endwhile;
             ?>
         </tbody>
     </table>
@@ -180,6 +187,7 @@ header("Expires: 0");
         <p>Tanggal: <?php echo date('d/m/Y H:i:s'); ?></p>
     </div>
 </body>
+
 </html>
 <?php
 mysqli_close($conn);
