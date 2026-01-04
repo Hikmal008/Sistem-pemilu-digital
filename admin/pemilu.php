@@ -31,15 +31,30 @@ if (isset($_POST['activate_now'])) {
         header("Location: pemilu.php");
         exit;
     }
+    $qDurasi = mysqli_query($conn, "
+    SELECT tanggal_mulai, tanggal_selesai
+    FROM elections
+    WHERE id_election = $id_election
+    AND status = 'draft'
+    ");
+
+    $data = mysqli_fetch_assoc($qDurasi);
+
+    $durasi_hari = ceil(
+        (strtotime($data['tanggal_selesai']) - strtotime($data['tanggal_mulai']))
+            / (60 * 60 * 24)
+    );
 
     // Aktifkan pemilu (override timer)
     mysqli_query($conn, "
-        UPDATE elections
-        SET status = 'aktif',
-            tanggal_mulai = '$now'
-        WHERE id_election = $id_election
-        AND status = 'draft'
+    UPDATE elections
+    SET status = 'aktif',
+        tanggal_mulai = '$now',
+        tanggal_selesai = DATE_ADD('$now', INTERVAL $durasi_hari DAY)
+    WHERE id_election = $id_election
+    AND status = 'draft'
     ");
+
 
     set_flash_message('success', 'Pemilu berhasil diaktifkan sekarang.');
     header("Location: pemilu.php");
@@ -62,6 +77,16 @@ if (isset($_POST['finish_now'])) {
         AND status = 'aktif'
     ");
     promote_next_election_if_any();
+    $seri = checkElectionTie($id_election);
+
+    if ($seri) {
+        createElectionReplay($id_election, $seri);
+        set_flash_message(
+            'warning',
+            'Hasil pemilu SERI. Pemilu ulang telah dibuat (status Draft).'
+        );
+    }
+
 
 
     set_flash_message('success', 'Pemilu berhasil diakhiri.');
@@ -72,7 +97,6 @@ if (isset($_POST['finish_now'])) {
 
 // Auto update status pemilu
 auto_update_election_status();
-promote_next_election_if_any();
 
 // Ambil flash message
 $flash = get_flash_message();

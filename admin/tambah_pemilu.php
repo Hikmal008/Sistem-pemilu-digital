@@ -24,6 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validasi tanggal
     $start = strtotime($tanggal_mulai);
     $end = strtotime($tanggal_selesai);
+    $now = time();
+
+    // ❌ Tanggal mulai tidak boleh di masa lalu
+    if ($start < $now) {
+        $errors[] = "Tanggal & waktu mulai tidak boleh di masa lalu!";
+    }
 
     if ($end <= $start) {
         $errors[] = "Tanggal selesai harus lebih besar dari tanggal mulai!";
@@ -162,7 +168,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
                         <label for="tanggal_mulai">Tanggal & Waktu Mulai <span>*</span></label>
-                        <input type="datetime-local" id="tanggal_mulai" name="tanggal_mulai" required
+                        <input type="datetime-local"
+                            id="tanggal_mulai"
+                            name="tanggal_mulai"
+                            required
+                            min="<?php echo date('Y-m-d\TH:i'); ?>"
                             value="<?php echo isset($_POST['tanggal_mulai']) ? $_POST['tanggal_mulai'] : ''; ?>">
                     </div>
 

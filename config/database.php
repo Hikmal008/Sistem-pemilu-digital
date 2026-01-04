@@ -151,15 +151,21 @@ function get_election_status($id_election) {
 function auto_update_election_status() {
     global $conn;
     $now = date('Y-m-d H:i:s');
-    
-    // Update pemilu yang sudah selesai
-    $query = "UPDATE elections SET status = 'selesai' 
-              WHERE status = 'aktif' 
-              AND tanggal_selesai < ?";
+
+    // Draft TIDAK BOLEH diubah otomatis
+    // Aktif → Selesai jika waktu habis
+    $query = "
+        UPDATE elections 
+        SET status = 'selesai'
+        WHERE status = 'aktif'
+        AND tanggal_selesai < ?
+    ";
+
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "s", $now);
     mysqli_stmt_execute($stmt);
 }
+
 
 // ============================================
 // FUNGSI VOTING
@@ -205,4 +211,63 @@ function get_status_pemilu() {
     $election = get_active_election();
     return $election ? 'buka' : 'tutup';
 }
+
+function checkElectionTie($id_election) {
+    global $conn;
+
+    $sql = "
+        SELECT k.id_kandidat, COUNT(v.id_voting) AS total
+        FROM kandidat k
+        LEFT JOIN voting v ON v.id_kandidat = k.id_kandidat
+        WHERE k.id_election = ?
+        GROUP BY k.id_kandidat
+        ORDER BY total DESC
+    ";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $id_election);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+
+    $data = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    if (count($data) === 0) return null;
+
+    $max = $data[0]['total'];
+    $seri = array_filter($data, fn($d) => $d['total'] == $max);
+
+    return count($seri) > 1 ? $seri : null;
+}
+
+function createElectionReplay($id_election, $kandidat_seri) {
+    global $conn;
+
+    // Ambil data pemilu lama
+    $old = mysqli_fetch_assoc(mysqli_query(
+        $conn, "SELECT * FROM elections WHERE id_election = $id_election"
+    ));
+
+    $nama_baru = "Pemilu Ulang - " . $old['nama_pemilu'];
+
+    mysqli_query($conn, "
+        INSERT INTO elections 
+        (nama_pemilu, deskripsi, status, parent_election_id, created_by)
+        VALUES 
+        ('$nama_baru', 'Pemilu ulang akibat hasil seri', 'draft', $id_election, {$old['created_by']})
+    ");
+
+    $new_id = mysqli_insert_id($conn);
+
+    // Salin kandidat seri
+    foreach ($kandidat_seri as $k) {
+        mysqli_query($conn, "
+            INSERT INTO kandidat (id_election, nomor_urut, nama_kandidat, visi, misi, foto)
+            SELECT $new_id, nomor_urut, nama_kandidat, visi, misi, foto
+            FROM kandidat
+            WHERE id_kandidat = {$k['id_kandidat']}
+        ");
+    }
+
+    return $new_id;
+}
+
 ?>

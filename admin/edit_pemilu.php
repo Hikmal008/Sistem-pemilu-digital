@@ -58,6 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($status_info['status_real'] == 'berlangsung' && $tanggal_mulai != $pemilu['tanggal_mulai']) {
         $errors[] = "Tidak dapat mengubah tanggal mulai pada pemilu yang sedang berlangsung!";
     }
+    $now = time();
+
+    // Jika pemilu belum berlangsung, tanggal mulai tidak boleh ke masa lalu
+    if ($status_info['status_real'] === 'draft' || $status_info['status_real'] === 'belum_dimulai') {
+        if ($start < $now) {
+            $errors[] = "Tanggal & waktu mulai tidak boleh di masa lalu!";
+        }
+    }
 
     if (empty($errors)) {
         $query_update = "UPDATE elections SET 
