@@ -101,7 +101,7 @@ $total_pemilih = $row_pemilih['total'];
                     <div class="sidebar-user-role">Administrator</div>
                 </div>
             </div>
-            <a href="logout.php" class="sidebar-logout">🚪 Logout</a>
+            <a href="logout.php" class="sidebar-logout">Logout</a>
         </div>
     </aside>
 
